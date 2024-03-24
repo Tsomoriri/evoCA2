@@ -11,6 +11,7 @@ Study the fundamentals of LSTM, including its architecture, gating mechanisms, a
 Research NAS, its objectives, search spaces, and various approaches (e.g., reinforcement learning, evolutionary algorithms, gradient-based methods).
 Focus on recent literature that discusses the application of LSTM to NAS, as well as advancements and variations in both LSTM and NAS.
 Organize your literature review by discussing the key aspects of LSTM and NAS, their strengths and limitations, and their combined use.
+
 Step 3: Describe the problem formulation, search algorithm, and adaptations
 
 Formulate the NAS problem, defining the search space (e.g., layer types, hyperparameters), objective function (e.g., accuracy, model complexity), and constraints (e.g., computational budget).
@@ -20,11 +21,13 @@ Representation of architectures (e.g., sequences of layer types and hyperparamet
 Reward function for guiding the LSTM controller (e.g., validation accuracy, model size)
 Training strategy for the LSTM controller (e.g., reinforcement learning, policy gradient)
 Use diagrams to illustrate the NAS search space and the LSTM controller architecture.
+
 Step 4: Present pseudocode for your algorithms
 
 Provide high-level pseudocode for the LSTM-based NAS algorithm, including the main loop, architecture generation, and controller update.
 Include pseudocode for the reward calculation, architecture evaluation, and any NAS-specific components.
 Ensure the pseudocode is clear, well-structured, and properly commented. Use descriptive variable names to enhance readability.
+
 Step 5: Design a comprehensive set of experiments
 
 Define your experimental objectives (e.g., evaluate the impact of different reward functions, compare LSTM-based NAS with other NAS methods).
