@@ -70,3 +70,34 @@ Investigate the use of reinforcement learning techniques, such as Q-learning or 
 Visualization and Analysis:
 Visualize the generated TSP solutions to gain insights into the model's decision-making process.
 Analyze the learned representations and attention weights (if applicable) to understand what the model is focusing on during the solution generation process.
+
+
+
+---------------------------------------------------------------
+Reference Paper:
+"A Comprehensive Survey on Particle Swarm Optimization Algorithm and Its Applications" by Yudong Zhang, Shuihua Wang, and Genlin Ji (2015)
+
+This paper provides a comprehensive overview of the Particle Swarm Optimization (PSO) algorithm and its applications in various domains. It covers the basic concepts, variations, and recent developments in PSO.
+
+Benchmark Problems:
+
+Standard Benchmark on Real Vectors:
+Implement the basic PSO algorithm and test it on a set of standard benchmark functions for real-valued optimization, such as the Sphere, Rosenbrock, Rastrigin, Griewank, and Ackley functions.
+Compare the performance of PSO with other population-based algorithms like Differential Evolution (DE) and Evolutionary Algorithm (EA) on these benchmark functions.
+Neural Architecture Search (NAS) using PSO:
+Apply PSO to the problem of neural architecture search for a classification task, such as image classification on the CIFAR-10 dataset.
+Use PSO to optimize the hyperparameters and architecture of a Convolutional Neural Network (CNN) and compare the results with manual tuning or other NAS methods.
+Combinatorial Optimization Problem - Traveling Salesman Problem (TSP):
+Implement a discrete version of PSO (e.g., Discrete PSO or Hybrid PSO) to solve the TSP.
+Use benchmark TSP instances from the TSPLIB library and compare the performance of PSO with other local search algorithms like Simulated Annealing (SA) and Tabu Search (TS).
+Reproducing Results and Variations:
+
+Reproduce the results reported in the reference paper for the selected benchmark problems using your implementation of PSO.
+Experiment with different variations of PSO, such as:
+Inertia weight adaptation
+Constriction factor
+Neighborhood topologies (e.g., ring, von Neumann)
+Hybrid PSO with local search algorithms (e.g., PSO-SA, PSO-TS)
+Analyze the impact of different parameter settings (e.g., population size, acceleration coefficients) on the performance of PSO.
+Compare the results of PSO with other search algorithms like DE and EA on the selected benchmark problems.
+By reproducing the results from the reference paper and exploring variations of PSO on the chosen benchmark problems, you can gain insights into the behavior and performance of the algorithm. This project will provide you with hands-on experience in implementing and evaluating search algorithms on a range of optimization problems.
