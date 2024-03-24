@@ -43,15 +43,30 @@ By following these steps, you'll have a solid plan for your assignment using LST
 
 
 ------------------------------------------------------------
-Recent literature on LSTM and NAS:
-
-Zoph, B., & Le, Q. V. (2017). Neural architecture search with reinforcement learning. In International Conference on Learning Representations (ICLR).
-Seminal work on NAS, using an LSTM-based controller to generate architectures and reinforcement learning to train the controller.
-Pham, H., Guan, M. Y., Zoph, B., Le, Q. V., & Dean, J. (2018). Efficient neural architecture search via parameter sharing. In International Conference on Machine Learning (ICML).
-Introduced a more efficient NAS approach called ENAS, which shares parameters among child models to reduce search costs.
-Liu, H., Simonyan, K., & Yang, Y. (2019). DARTS: Differentiable architecture search. In International Conference on Learning Representations (ICLR).
-Proposed a gradient-based NAS method called DARTS, which relaxes the search space to be continuous and enables joint optimization of architecture and weights.
-Dong, X., & Yang, Y. (2019). Searching for a robust neural architecture in four GPU hours. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
-Presented a NAS approach that uses an LSTM-based super network to generate architectures and a progressive search strategy to improve efficiency.
-Ren, P., Xiao, Y., Chang, X., Huang, P. Y., Li, Z., Gupta, S., Chen, X., & Wang, X. (2020). A comprehensive survey of neural architecture search: Challenges and solutions. arXiv preprint arXiv:2006.02903.
-A comprehensive survey of NAS methods, discussing challenges, solutions, and future directions, including the use of LSTM-based controllers.
+Hyperparameter Tuning:
+Experiment with different values for the hidden size of the LSTM. Try increasing or decreasing the hidden size and observe the impact on the model's performance.
+Adjust the learning rate and see how it affects the convergence and quality of the solutions.
+Vary the number of training epochs and monitor the model's performance on a validation set to identify the optimal number of epochs.
+Architecture Variations:
+Investigate the effect of using multiple LSTM layers (stacked LSTM) instead of a single layer. This can help capture more complex patterns in the TSP data.
+Experiment with bidirectional LSTM, which processes the input sequence in both forward and backward directions. This can provide additional context to the model.
+Try incorporating attention mechanisms, such as self-attention or pointer networks, to allow the model to focus on relevant parts of the input sequence.
+Input Representation:
+Explore different ways of representing the TSP input data. Instead of using raw coordinates and distances, consider normalizing or scaling the features to a specific range.
+Investigate the impact of including additional features, such as the angle between nodes or the relative position of nodes, to provide more information to the model.
+Training Strategies:
+Implement different strategies for generating training samples. Instead of using random TSP solutions, consider using heuristic algorithms (e.g., nearest neighbor, Christofides algorithm) to generate better-quality solutions as targets.
+Experiment with different loss functions, such as mean squared error (MSE) or cross-entropy loss, to guide the model's learning process.
+Apply techniques like curriculum learning, where you start training with simpler TSP instances and gradually increase the complexity of the instances as the model improves.
+Evaluation Metrics:
+Use appropriate evaluation metrics to assess the quality of the generated TSP solutions. Consider metrics like total tour length, optimality gap (compared to the optimal solution), or computational time.
+Compare the performance of the LSTM model with traditional TSP solvers or other machine learning approaches to benchmark its effectiveness.
+Problem Variations:
+Test the LSTM model on different types of TSP instances, such as symmetric or asymmetric TSP, Euclidean or non-Euclidean distances, or TSP with additional constraints (e.g., time windows, capacity limits).
+Evaluate the model's performance on TSP instances of varying sizes (number of nodes) to assess its scalability.
+Comparison with Other Models:
+Compare the performance of the LSTM model with other neural network architectures, such as feedforward neural networks or graph neural networks.
+Investigate the use of reinforcement learning techniques, such as Q-learning or policy gradients, to train the model on the TSP.
+Visualization and Analysis:
+Visualize the generated TSP solutions to gain insights into the model's decision-making process.
+Analyze the learned representations and attention weights (if applicable) to understand what the model is focusing on during the solution generation process.
