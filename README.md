@@ -37,3 +37,21 @@ Determine the range of values for LSTM and NAS hyperparameters (e.g., LSTM hidde
 Plan experiments to compare your LSTM-based NAS with random search and a simple evolutionary NAS method on the chosen datasets and tasks.
 Justify your choices and explain how the experiments will provide insights into the performance and behavior of LSTM-based NAS.
 By following these steps, you'll have a solid plan for your assignment using LSTM and NAS. Remember to document your work thoroughly, provide clear explanations for your decisions, and cite relevant literature to support your approach. In the next steps, you'll focus on implementing the experiments, presenting the results, and analyzing the findings.
+
+
+
+
+
+------------------------------------------------------------
+Recent literature on LSTM and NAS:
+
+Zoph, B., & Le, Q. V. (2017). Neural architecture search with reinforcement learning. In International Conference on Learning Representations (ICLR).
+Seminal work on NAS, using an LSTM-based controller to generate architectures and reinforcement learning to train the controller.
+Pham, H., Guan, M. Y., Zoph, B., Le, Q. V., & Dean, J. (2018). Efficient neural architecture search via parameter sharing. In International Conference on Machine Learning (ICML).
+Introduced a more efficient NAS approach called ENAS, which shares parameters among child models to reduce search costs.
+Liu, H., Simonyan, K., & Yang, Y. (2019). DARTS: Differentiable architecture search. In International Conference on Learning Representations (ICLR).
+Proposed a gradient-based NAS method called DARTS, which relaxes the search space to be continuous and enables joint optimization of architecture and weights.
+Dong, X., & Yang, Y. (2019). Searching for a robust neural architecture in four GPU hours. In IEEE Conference on Computer Vision and Pattern Recognition (CVPR).
+Presented a NAS approach that uses an LSTM-based super network to generate architectures and a progressive search strategy to improve efficiency.
+Ren, P., Xiao, Y., Chang, X., Huang, P. Y., Li, Z., Gupta, S., Chen, X., & Wang, X. (2020). A comprehensive survey of neural architecture search: Challenges and solutions. arXiv preprint arXiv:2006.02903.
+A comprehensive survey of NAS methods, discussing challenges, solutions, and future directions, including the use of LSTM-based controllers.
