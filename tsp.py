@@ -1,8 +1,7 @@
 import numpy as np
 import pandas as pd
+from lstm import LSTM
 
-# LSTM class (same as before)
-# ...
 
 # Generate sample TSP data
 num_nodes = 10
