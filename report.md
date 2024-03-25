@@ -66,3 +66,7 @@ References
 [11] Yudong Zhang, Shuihua Wang, and Genlin Ji. 2015. A comprehensive survey on particle swarm optimization algorithm and its applications. Mathematical Problems in Engineering 2015 (2015).
 
 [12] Hui-Jie Zheng, Xiang-Qian Jiang, and Wen-Jing Yan. 2020. Particle swarm optimization with adaptive mutation and reinitialization for solving constrained optimization problems. IEEE Access 8 (2020), 21851–21870.
+
+
+
+Adaptive parameter control: Another approach is to use adaptive parameter control strategies within PSO itself [2]. Instead of using fixed parameter values, you can adapt the parameters dynamically during the optimization process based on the search progress. Techniques like adaptive inertia weight, time-varying acceleration coefficients, or self-adaptive parameter control can automatically adjust the parameters without the need for explicit parameter tuning.
