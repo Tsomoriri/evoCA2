@@ -79,6 +79,6 @@ References
 
 [12] Hui-Jie Zheng, Xiang-Qian Jiang, and Wen-Jing Yan. 2020. Particle swarm optimization with adaptive mutation and reinitialization for solving constrained optimization problems. IEEE Access 8 (2020), 21851–21870.
 
-
+[13] Kennedy, J., & Eberhart, R. C. (1997). A discrete binary version of the particle swarm algorithm. In 1997 IEEE International Conference on Systems, Man, and Cybernetics. Computational Cybernetics and Simulation (Vol. 5, pp. 4104-4108). IEEE.
 
 Adaptive parameter control: Another approach is to use adaptive parameter control strategies within PSO itself [2]. Instead of using fixed parameter values, you can adapt the parameters dynamically during the optimization process based on the search progress. Techniques like adaptive inertia weight, time-varying acceleration coefficients, or self-adaptive parameter control can automatically adjust the parameters without the need for explicit parameter tuning.
