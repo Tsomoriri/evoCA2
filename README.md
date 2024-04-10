@@ -1,6 +1,6 @@
 # evolutionary computing CA2
 steps:
-
+https://colah.github.io/posts/2015-08-Understanding-LSTMs/
 Step 1: LSTM and NAS
 Search Algorithm: Long Short-Term Memory (LSTM)
 Optimization Problem: Neural Architecture Search (NAS)
