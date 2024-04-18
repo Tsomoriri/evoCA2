@@ -5,7 +5,7 @@ import math
 import time
 from abc import ABC, abstractmethod
 import random
-from math import sqrt,tanh
+from math import sqrt,tanh,exp
 from joblib import Parallel, delayed
 import matplotlib.pyplot as plt
 import seaborn as sns
@@ -96,7 +96,7 @@ class StochasticHillClimber:
         convergence_data = []
         start_time = time.time()
 
-        while iteration < self.max_iterations and stagnation_counter < self.max_stagnation:
+        while iteration < self.max_iterations:
             new_solution = list(best_solution)
 
             if len(new_solution) >= 2:
@@ -114,7 +114,10 @@ class StochasticHillClimber:
                 convergence_data.append(best_fitness)
             else:
                 # Handle the case where the length of new_solution is less than 2
-                pass
+                # In this case, there is no way to improve the solution by swapping cities
+                # Therefore, we can simply continue to the next iteration
+                stagnation_counter += 1
+                convergence_data.append(best_fitness)
 
             iteration += 1
 
@@ -340,6 +343,10 @@ class SpatialPSO(BasePSO):
                 j = particle.pbest_solution.index(particle.solution[i])
                 new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
 
+        # Introduce a swap operation to explore the search space
+        if random.random() < 0.3:  # Adjust the probability as needed
+            i, j = random.sample(range(len(new_solution)), 2)
+            new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
         particle.solution = new_solution
         particle.fitness = self.calculate_fitness(particle.solution)
         if particle.fitness < particle.pbest_fitness:
@@ -347,7 +354,7 @@ class SpatialPSO(BasePSO):
             particle.pbest_fitness = particle.fitness
 
     def sigmoid(self, x):
-        return (1 + tanh(x)) / 2
+        return (1 + tanh(x)) / 4
 
     def optimize(self):
         start_time = time.time()
@@ -504,6 +511,10 @@ class PredatorPreyPSO(BasePSO):
                 j = particle.pbest_solution.index(particle.solution[i])
                 new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
 
+        # Introduce a swap operation to explore the search space
+        if random.random() < 0.3:  # Adjust the probability as needed
+            i, j = random.sample(range(len(new_solution)), 2)
+            new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
         particle.solution = new_solution
         particle.fitness = self.calculate_fitness(particle.solution)
         if particle.fitness < particle.pbest_fitness:
@@ -670,6 +681,8 @@ class PrettyPlotting:
         pso_best_lengths = []
         hpso_best_lengths = []
         apso_best_lengths = []
+        random_sampling_best_lengths = []
+        stochastic_hill_climber_best_lengths = []
         spso_best_lengths = []
         depso_best_lengths = []
         pppso_best_lengths = []
@@ -679,6 +692,8 @@ class PrettyPlotting:
             pso_best_lengths.append(min(run['best_fitness'] for run in runs['PSO']))
             hpso_best_lengths.append(min(run['best_fitness'] for run in runs['HPSO']))
             apso_best_lengths.append(min(run['best_fitness'] for run in runs['APSO']))
+            random_sampling_best_lengths.append(min(run['best_fitness'] for run in runs['Random Sampling']))
+            stochastic_hill_climber_best_lengths.append(min(run['best_fitness'] for run in runs['Stochastic Hill Climber']))
             spso_best_lengths.append(min(run['best_fitness'] for run in runs['spso']))
             depso_best_lengths.append(min(run['best_fitness'] for run in runs['depso']))
             pppso_best_lengths.append(min(run['best_fitness'] for run in runs['pppso']))
@@ -686,6 +701,8 @@ class PrettyPlotting:
         plt.plot(population_sizes, pso_best_lengths, marker='o', label='PSO')
         plt.plot(population_sizes, hpso_best_lengths, marker='o', label='HPSO')
         plt.plot(population_sizes, apso_best_lengths, marker='o', label='APSO')
+        plt.plot(population_sizes, random_sampling_best_lengths, marker='o', label='Random Sampling')
+        plt.plot(population_sizes, stochastic_hill_climber_best_lengths, marker='o', label='Stochastic Hill Climber')
         plt.plot(population_sizes, spso_best_lengths, marker='o', label='SPSO')
         plt.plot(population_sizes, depso_best_lengths, marker='o', label='DEPSO')
         plt.plot(population_sizes, pppso_best_lengths, marker='o', label='PPPSO')
@@ -702,7 +719,7 @@ class PrettyPlotting:
         plt.figure(figsize=(10, 6))
 
         population_sizes = list(data.keys())
-        algorithms = ['PSO', 'HPSO', 'APSO', 'spso', 'depso', 'pppso']
+        algorithms = ['PSO', 'HPSO', 'APSO', 'spso', 'depso', 'pppso','Random Sampling', 'Stochastic Hill Climber']
         runtimes = {algo: [] for algo in algorithms}
 
         for pop_size in population_sizes:
@@ -782,7 +799,7 @@ class PrettyPlotting:
         plt.tight_layout(rect=(0.0, 0.03, 1.0, 0.95))
         plt.show()
 
-    def convergence_plot_best_hyperparameters(self, data, tsp_instance_name):
+    def convergence_plot_random_hyperparameters(self, data, tsp_instance_name):
         plt.figure(figsize=(10, 6))
         iterations = range(1, len(data['PSO'][0]['convergence_data']) + 1)
 
@@ -790,12 +807,33 @@ class PrettyPlotting:
         pso_mean_convergence = np.mean(pso_convergence_data, axis=0)
         hpso_convergence_data = [run['convergence_data'] for run in data['HPSO']]
         hpso_mean_convergence = np.mean(hpso_convergence_data, axis=0)
+        apso_convergence_data = [run['convergence_data'] for run in data['APSO']]
+        apso_mean_convergence = np.mean(apso_convergence_data, axis=0)
+        random_sampling_convergence_data = [run['convergence_data'] for run in data['Random Sampling']]
+        random_sampling_mean_convergence = np.mean(random_sampling_convergence_data, axis=0)
+        stochastic_hill_climber_convergence_data = [run['convergence_data'] for run in data['Stochastic Hill Climber']]
+        stochastic_hill_climber_convergence_data = np.array(stochastic_hill_climber_convergence_data)
+        stochastic_hill_climber_mean_convergence = np.mean(stochastic_hill_climber_convergence_data, axis=0)
+
+        spso_convergence_data = [run['convergence_data'] for run in data['spso']]
+        spso_mean_convergence = np.mean(spso_convergence_data, axis=0)
+        depso_convergence_data = [run['convergence_data'] for run in data['depso']]
+        depso_mean_convergence = np.mean(depso_convergence_data, axis=0)
+        pppso_convergence_data = [run['convergence_data'] for run in data['pppso']]
+        pppso_mean_convergence = np.mean(pppso_convergence_data, axis=0)
+
 
         plt.plot(iterations, pso_mean_convergence, label='PSO')
         plt.plot(iterations, hpso_mean_convergence, label='HPSO')
+        plt.plot(iterations, apso_mean_convergence, label='APSO')
+        plt.plot(iterations, random_sampling_mean_convergence, label='Random Sampling')
+        plt.plot(iterations, stochastic_hill_climber_mean_convergence, label='Stochastic Hill Climber')
+        plt.plot(iterations, spso_mean_convergence, label='SPSO')
+        plt.plot(iterations, depso_mean_convergence, label='DEPSO')
+        plt.plot(iterations, pppso_mean_convergence, label='PPPSO')
         plt.xlabel('Number of Iterations')
         plt.ylabel('Best Tour Length')
-        plt.title('Convergence Plot - Best Hyperparameter Settings')
+        plt.title('Convergence Plot')
         plt.legend()
         plt.suptitle(f'TSP Instance: {tsp_instance_name}', fontsize=14)
         plt.tight_layout(rect=(0.0, 0.03, 1.0, 0.95))
@@ -883,6 +921,27 @@ class PrettyPlotting:
         plt.ylabel('Best Tour Length')
         plt.title('Impact of w_min and w_max on Best Tour Length (APSO)')
         plt.xticks(range(len(data)), [f'w_min={w_min}, w_max={w_max}' for w_min, w_max in data.keys()], rotation=45)
+        plt.legend()
+        plt.suptitle(f'TSP Instance: {tsp_instance_name}', fontsize=14)
+        plt.tight_layout(rect=(0.0, 0.03, 1.0, 0.95))
+        plt.show()
+
+    def line_plot_max_iterations(self, data, tsp_instance_name):
+        plt.figure(figsize=(10, 6))
+        max_iterations = list(data.keys())
+        algorithms = data[max_iterations[0]].keys()
+
+        for algo in algorithms:
+            best_lengths = []
+            for iterations in max_iterations:
+                runs = data[iterations][algo]
+                best_lengths.append(min(run['best_fitness'] for run in runs))
+
+            plt.plot(max_iterations, best_lengths, marker='o', label=algo)
+
+        plt.xlabel('Maximum Iterations')
+        plt.ylabel('Best Tour Length')
+        plt.title('Impact of Maximum Iterations on Best Tour Length')
         plt.legend()
         plt.suptitle(f'TSP Instance: {tsp_instance_name}', fontsize=14)
         plt.tight_layout(rect=(0.0, 0.03, 1.0, 0.95))
@@ -1050,8 +1109,19 @@ class Experiment:
 
     def run_best_hyperparameter_experiments(self):
         self.run()
-        self.plotter.convergence_plot_best_hyperparameters(self.data, tsp_instance_name=self.tsp_instance_name)
+        self.plotter.convergence_plot_random_hyperparameters(self.data, tsp_instance_name=self.tsp_instance_name)
 
     def run_all_algorithms_convergence(self):
         self.run()
         self.plotter.convergence_plot_all_algorithms(self.data, tsp_instance_name=self.tsp_instance_name)
+
+    def max_iterations_experiments(self, max_iterations_list):
+        results = Parallel(n_jobs=-1, backend='multiprocessing')(
+            delayed(self.run_max_iterations_experiment)(max_iterations) for max_iterations in max_iterations_list)
+        data = {max_iterations: result for max_iterations, result in zip(max_iterations_list, results)}
+        self.plotter.line_plot_max_iterations(data, tsp_instance_name=self.tsp_instance_name)
+
+    def run_max_iterations_experiment(self, max_iterations):
+        self.max_iterations = max_iterations
+        self.run()
+        return self.data
