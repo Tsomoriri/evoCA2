@@ -337,18 +337,23 @@ class SpatialPSO(BasePSO):
 
     def update_position(self, particle):
         new_solution = particle.solution[:]
+        pbest_indices = {city: i for i, city in enumerate(particle.pbest_solution)}
+        swap_prob = max(0.3 * (1 - (self.current_iteration / self.max_iterations)), 0.1)
+
         for i in range(len(particle.solution)):
             if random.random() < self.sigmoid(particle.velocity[i]):
                 # Swap the current city with the city in pbest
-                j = particle.pbest_solution.index(particle.solution[i])
+                j = pbest_indices[particle.solution[i]]
                 new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
 
-        # Introduce a swap operation to explore the search space
-        if random.random() < 0.3:  # Adjust the probability as needed
-            i, j = random.sample(range(len(new_solution)), 2)
-            new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
+            # Introduce a swap operation to explore the search space
+            if random.random() < swap_prob:
+                j = random.randint(0, len(new_solution) - 1)
+                new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
+
         particle.solution = new_solution
         particle.fitness = self.calculate_fitness(particle.solution)
+
         if particle.fitness < particle.pbest_fitness:
             particle.pbest_solution = particle.solution
             particle.pbest_fitness = particle.fitness
@@ -367,7 +372,7 @@ class SpatialPSO(BasePSO):
         self.gbest_fitness = min(swarm, key=lambda p: p.fitness).fitness
 
         convergence_data = []
-        for iteration in range(self.max_iterations):
+        for self.current_iteration in range(self.max_iterations):
             for particle in swarm:
                 self.update_velocity(particle)
                 self.update_position(particle)
@@ -412,27 +417,25 @@ class DEPSO(BasePSO):
 
     def update_position(self, particle):
         new_solution = particle.solution[:]
-        # Select two random particles from the swarm
-        r1, r2 = random.sample(range(self.population_size), 2)
-        for i in range(len(particle.solution)):
-            if random.random() < self.cr:
-                # Find a city that is present in both solutions
-                common_cities = set(particle.solution) & set(self.swarm[r1].solution) & set(self.swarm[r2].solution)
-                if common_cities:
-                    city = random.choice(list(common_cities))
-                    j1 = self.swarm[r1].solution.index(city)
-                    j2 = self.swarm[r2].solution.index(city)
 
-                    # Apply the DE formula to get the new city index
-                    new_index = (j1 + int(self.f * (j2 - j1))) % len(particle.solution)
+        # Select three random particles from the swarm
+        r1, r2, r3 = random.sample(range(self.population_size), 3)
 
-                    # Find the city at the new index in the current solution
-                    new_city = particle.solution[new_index]
+        for j in range(len(particle.solution)):
+            if random.random() < self.cr or j == random.randint(0, len(particle.solution) - 1):
+                # Apply the DE crossover operator
+                new_city_index = int(
+                    self.swarm[r1].solution[j] + self.f * (self.swarm[r2].solution[j] - self.swarm[r3].solution[j]))
+                new_city_index = new_city_index % len(particle.solution)
 
-                    # Swap the current city with the new city
-                    current_index = particle.solution.index(city)
-                    new_solution[current_index] = new_city
-                    new_solution[new_index] = city
+                # Find the city at the new index
+                new_city = particle.solution[new_city_index]
+
+                # Find the current position of the new city in the solution
+                current_city_index = new_solution.index(new_city)
+
+                # Swap the cities to maintain the TSP rules
+                new_solution[j], new_solution[current_city_index] = new_solution[current_city_index], new_solution[j]
 
         new_fitness = self.calculate_fitness(new_solution)
         if new_fitness < particle.fitness:
@@ -479,6 +482,7 @@ class PredatorPreyPSO(BasePSO):
     def __init__(self, tsp_instance, population_size, max_iterations, w, c1, c2, fear_factor):
         super().__init__(tsp_instance, population_size, max_iterations, w, c1, c2)
         self.fear_factor = fear_factor
+        self.predator_velocity = [0] * len(tsp_instance)
 
     def create_particle(self):
         solution = random.sample(range(len(self.tsp_instance)), len(self.tsp_instance))
@@ -500,23 +504,29 @@ class PredatorPreyPSO(BasePSO):
             cognitive_velocity = self.c1 * r1 * (particle.pbest_solution[i] - particle.solution[i])
             social_velocity = self.c2 * r2 * (self.gbest_solution[i] - particle.solution[i])
             predator_velocity = self.fear_factor * (particle.solution[i] - predator.solution[i])
-            particle.velocity[i] = self.w * particle.velocity[
-                i] + cognitive_velocity + social_velocity + predator_velocity
+            particle.velocity[i] = self.w * particle.velocity[i] + cognitive_velocity + social_velocity + predator_velocity
+
+        self.predator_velocity = [self.fear_factor * (particle.solution[i] - predator.solution[i]) for i in range(len(particle.solution))]
 
     def update_position(self, particle):
         new_solution = particle.solution[:]
+        pbest_indices = {city: i for i, city in enumerate(particle.pbest_solution)}
+        swap_prob = max(0.3 * (1 - (self.current_iteration / self.max_iterations)), 0.1)
+
         for i in range(len(particle.solution)):
             if random.random() < self.sigmoid(particle.velocity[i]):
                 # Swap the current city with the city in pbest
-                j = particle.pbest_solution.index(particle.solution[i])
+                j = pbest_indices[particle.solution[i]]
                 new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
 
-        # Introduce a swap operation to explore the search space
-        if random.random() < 0.3:  # Adjust the probability as needed
-            i, j = random.sample(range(len(new_solution)), 2)
-            new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
+            # Introduce a swap operation to explore the search space
+            if random.random() < swap_prob:
+                j = random.randint(0, len(new_solution) - 1)
+                new_solution[i], new_solution[j] = new_solution[j], new_solution[i]
+
         particle.solution = new_solution
         particle.fitness = self.calculate_fitness(particle.solution)
+
         if particle.fitness < particle.pbest_fitness:
             particle.pbest_solution = particle.solution
             particle.pbest_fitness = particle.fitness
@@ -528,28 +538,24 @@ class PredatorPreyPSO(BasePSO):
         start_time = time.time()
         self.swarm = [self.create_particle() for _ in range(self.population_size)]
         predator = self.create_particle()
-
         self.gbest_solution = min(self.swarm, key=lambda p: p.fitness).solution
         self.gbest_fitness = min(self.swarm, key=lambda p: p.fitness).fitness
-
         convergence_data = []
-        for iteration in range(self.max_iterations):
+
+        for self.current_iteration in range(self.max_iterations):
             for particle in self.swarm:
                 self.update_velocity(particle, predator)
                 self.update_position(particle)
-
                 if particle.fitness < self.gbest_fitness:
                     self.gbest_solution = particle.solution
                     self.gbest_fitness = particle.fitness
-
             convergence_data.append(self.gbest_fitness)
             predator.solution = self.gbest_solution
+            predator.velocity = self.predator_velocity
 
         end_time = time.time()
         runtime = end_time - start_time
-
         return self.gbest_solution, self.gbest_fitness, convergence_data, runtime
-
 '''
 ********************************************************************************************************
 '''
