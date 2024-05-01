@@ -13,9 +13,19 @@ import pandas as pd
 import numpy as np
 import multiprocessing
 import concurrent.futures
-'''
-********************************************************************************************************
-'''
+
+"""
+/*********************************************************************
+ *  Data processing for TSP instances
+ *
+ *  ProcessData class reads the TSP file, calculates the
+ *  distance matrix, and saves it to a CSV file. 
+ *  There is also a method to load the distance matrix from 
+ *  the CSV file.
+ *********************************************************************/
+"""
+
+
 class ProcessData:
     def __init__(self, tsp_file_path, csv_file_path):
         self.tsp_file_path = tsp_file_path
@@ -76,7 +86,14 @@ class ProcessData:
 #
 # data_processor = ProcessData(tsp_file_path, csv_file_path)
 '''
-********************************************************************************************************
+/*****************************************************************************
+* Particle Swarm Optimization (PSO) algorithms
+*
+* 
+* alle Guten, alle Bösen folgen ihrer Rosenspur.
+* Küsse gab sie uns und Reben, einen Freund, geprüft im Tod;
+* Wollust ward dem Wurm gegeben, und der Cherub steht vor Gott.
+*****************************************************************************/
 '''
 
 
